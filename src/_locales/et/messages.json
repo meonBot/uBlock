@@ -847,6 +847,10 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "aboutPrivacyPolicy": {
+    "message": "Privaatsusteatis",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Muudatuste logi",
     "description": ""
@@ -885,6 +889,14 @@
   },
   "aboutDependencies": {
     "message": "Välised sõltuvused (ühilduvad GPLv3-ga):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "uBO enda filtriloendid on vabalt hostitud järgnevates <a href=\"https://et.wikipedia.org/wiki/Sisuedastusv%C3%B5rk\">sisuedastusvõrkudes</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Filtriloendi uuendamiseks kasutatakse juhuslikult valitud sisuedastusvõrku",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {

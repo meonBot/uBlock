@@ -847,6 +847,10 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "aboutPrivacyPolicy": {
+    "message": "Integritetspolicy",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Ändringslogg",
     "description": ""
@@ -887,6 +891,14 @@
     "message": "Externa beroenden (GPLv3-kompatibla):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "uBO:s egna filterlistor finns fritt tillgängligt på följande <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN:er</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Ett slumpmässigt valt CDN kommer att användas när en filterlista behöver uppdateras",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
     "message": "Säkerhetskopiera till fil",
     "description": "Text for button to create a backup of all settings"
@@ -920,7 +932,7 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "Lägg till följande webbadress till din anpassade filterlista?\n\nTitel: \"{{title}}\"\nWebbadress: {{url}}",
+    "message": "Lägg till följande webbadress till dina anpassade filterlistor?\n\nTitel: \"{{title}}\"\nWebbadress: {{url}}",
     "description": "No longer used"
   },
   "subscribeButton": {
@@ -1044,7 +1056,7 @@
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuSubscribeToList": {
-    "message": "Subscribe to filter list...",
+    "message": "Prenumerera på filterlista...",
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuTemporarilyAllowLargeMediaElements": {

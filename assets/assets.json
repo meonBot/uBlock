@@ -1,10 +1,17 @@
 {
 	"assets.json": {
 		"content": "internal",
-		"updateAfter": 13,
+		"updateAfter": 7,
 		"contentURL": [
 			"https://raw.githubusercontent.com/gorhill/uBlock/master/assets/assets.json",
 			"assets/assets.json"
+		],
+		"cdnURLs": [
+			"https://gitcdn.xyz/repo/gorhill/uBlock/master/assets/assets.json",
+			"https://cdn.jsdelivr.net/gh/gorhill/uBlock@master/assets/assets.json",
+			"https://cdn.statically.io/gh/gorhill/uBlock/master/assets/assets.json",
+			"https://combinatronics.io/gorhill/uBlock/master/assets/assets.json",
+			"https://raw.githubusercontent.com/gorhill/uBlock/master/assets/assets.json"
 		]
 	},
 	"public_suffix_list.dat": {
@@ -148,6 +155,23 @@
 		"contentURL": "https://filters.adtidy.org/extension/ublock/filters/3.txt",
 		"supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters",
 		"instructionURL": "https://kb.adguard.com/en/general/adguard-ad-filters"
+	},
+	"adguard-spyware-url": {
+		"content": "filters",
+		"group": "privacy",
+		"off": true,
+		"title": "AdGuard URL Tracking Protection",
+		"contentURL": "https://filters.adtidy.org/extension/ublock/filters/17.txt",
+		"supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters",
+		"instructionURL": "https://kb.adguard.com/en/general/adguard-ad-filters"
+	},
+	"block-lan": {
+		"content": "filters",
+		"group": "privacy",
+		"off": true,
+		"title": "Block access to LAN",
+		"contentURL": "https://raw.githubusercontent.com/gwarser/filter-lists/master/lan-block.txt",
+		"supportURL": "https://github.com/gwarser/filter-lists"
 	},
 	"easyprivacy": {
 		"content": "filters",
@@ -593,7 +617,7 @@
 		"off": true,
 		"title": "VIE: ABPVN List",
 		"lang": "vi",
-		"contentURL": "https://raw.githubusercontent.com/abpvn/abpvn/master/filter/abpvn.txt",
+		"contentURL": "https://raw.githubusercontent.com/abpvn/abpvn/master/filter/abpvn_ublock.txt",
 		"supportURL": "https://abpvn.com/"
 	}
 }

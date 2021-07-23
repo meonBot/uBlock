@@ -847,6 +847,10 @@
     "message": "פורמט Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "aboutPrivacyPolicy": {
+    "message": "מדיניות פרטיות",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "רשימת שינויים",
     "description": ""
@@ -885,6 +889,14 @@
   },
   "aboutDependencies": {
     "message": "תלויות חיצוניות (תואם-GPLv3):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "רשימות המסננים של uBO מופצות בחינם בשירותי ה <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN</a> הבאים:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "כאשר רשימת מסננים צריכה להתעדכן, נבחר באקראי לטובת זאת שירות CDN  ",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -1044,7 +1056,7 @@
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuSubscribeToList": {
-    "message": "Subscribe to filter list...",
+    "message": "הירשם לרשימת המסננים...",
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuTemporarilyAllowLargeMediaElements": {

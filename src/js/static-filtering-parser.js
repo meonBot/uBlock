@@ -103,9 +103,9 @@ const Parser = class {
         this.extOptionsIterator = new ExtOptionsIterator(this);
         this.maxTokenLength = Number.MAX_SAFE_INTEGER;
         this.expertMode = options.expertMode !== false;
-        this.reIsLocalhostRedirect = /(?:0\.0\.0\.0|(?:broadcast|local)host|local|ip6-\w+)(?:[^\w.-]|$)/;
+        this.reIsLocalhostRedirect = /(?:0\.0\.0\.0|broadcasthost|local|localhost(?:\.localdomain)?|ip6-\w+)(?:[^\w.-]|$)/;
         this.reHostname = /^[^\x00-\x24\x26-\x29\x2B\x2C\x2F\x3A-\x40\x5B-\x5E\x60\x7B-\x7F]+/;
-        this.reHostsSink = /^[\w-.:\[\]]+$/;
+        this.reHostsSink = /^[\w%.:\[\]-]+$/;
         this.reHostsSource = /^[^\x00-\x24\x26-\x29\x2B\x2C\x2F\x3A-\x40\x5B-\x5E\x60\x7B-\x7F]+$/;
         this.reUnicodeChar = /[^\x00-\x7F]/;
         this.reUnicodeChars = /[^\x00-\x7F]/g;
@@ -113,6 +113,9 @@ const Parser = class {
         this.rePlainHostname = /^(?:[\w-]+\.)*[a-z]+$/;
         this.rePlainEntity = /^(?:[\w-]+\.)+\*$/;
         this.reEntity = /^[^*]+\.\*$/;
+        // https://github.com/uBlockOrigin/uBlock-issues/issues/1146
+        //   From https://codemirror.net/doc/manual.html#option_specialChars
+        this.reInvalidCharacters = /[\x00-\x1F\x7F-\x9F\xAD\u061C\u200B-\u200F\u2028\u2029\uFEFF\uFFF9-\uFFFC]/;
         this.punycoder = new URL(self.location);
         // TODO: mind maxTokenLength
         this.reGoodRegexToken
@@ -1126,6 +1129,7 @@ const Parser = class {
         if ( len === 0 ) { return true; }
         const patternIsRegex = this.patternIsRegex();
         let pattern = this.getNetPattern();
+        if ( this.reInvalidCharacters.test(pattern) ) { return false; }
         // Punycode hostname part of the pattern.
         if ( patternIsRegex === false ) {
             const match = this.reHostname.exec(pattern);
@@ -1304,9 +1308,9 @@ Parser.prototype.SelectorCompiler = class {
         ].join(''));
         this.reEatBackslashes = /\\([()])/g;
         this.reEscapeRegex = /[.*+?^${}()|[\]\\]/g;
-        this.reNeedScope = /^\s*>/;
+        this.reDropScope = /^\s*:scope\s*(?=[+>~])/;
         this.reIsDanglingSelector = /[+>~\s]\s*$/;
-        this.reIsSiblingSelector = /^\s*[+~]/;
+        this.reIsCombinator = /^\s*[+>~]/;
         this.regexToRawValue = new Map();
         // https://github.com/gorhill/uBlock/issues/2793
         this.normalizedOperators = new Map([
@@ -1491,15 +1495,6 @@ Parser.prototype.SelectorCompiler = class {
         return { name: name, value: regexDetails };
     }
 
-    // https://github.com/AdguardTeam/ExtendedCss/issues/31#issuecomment-302391277
-    //   Prepend `:scope ` if needed.
-    compileConditionalSelector(s) {
-        if ( this.reNeedScope.test(s) ) {
-            s = `:scope ${s}`;
-        }
-        return this.compileProcedural(s);
-    }
-
     compileInteger(s, min = 0, max = 0x7FFFFFFF) {
         if ( /^\d+$/.test(s) === false ) { return; }
         const n = parseInt(s, 10);
@@ -1513,7 +1508,7 @@ Parser.prototype.SelectorCompiler = class {
     //   changing the behavior of CSS4's :not().
     compileNotSelector(s) {
         if ( this.cssSelectorType(s) === 0 ) {
-            return this.compileConditionalSelector(s);
+            return this.compileProcedural(s);
         }
     }
 
@@ -1528,9 +1523,9 @@ Parser.prototype.SelectorCompiler = class {
     }
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/382#issuecomment-703725346
-    //   Prepend `*` only when it can be deemed implicit.
+    //   Prepend `:scope` only when it can be deemed implicit.
     compileSpathExpression(s) {
-        if ( this.cssSelectorType(/^\s*[+:>~]/.test(s) ? '*' + s : s) === 1 ) {
+        if ( this.cssSelectorType(/^\s*[+:>~]/.test(s) ? `:scope${s}` : s) === 1 ) {
             return s;
         }
     }
@@ -1725,14 +1720,18 @@ Parser.prototype.SelectorCompiler = class {
         // https://www.reddit.com/r/uBlockOrigin/comments/c6iem5/
         //   Convert sibling-selector prefix into :spath operator, but
         //   only if context is not the root.
+        // https://github.com/uBlockOrigin/uBlock-issues/issues/1011#issuecomment-884806241
+        //   Drop explicit `:scope` in case of leading combinator, all such
+        //   cases are normalized to implicit `:scope`.
         if ( prefix !== '' ) {
             if ( this.reIsDanglingSelector.test(prefix) && tasks.length !== 0 ) {
                 prefix += ' *';
             }
+            prefix = prefix.replace(this.reDropScope, '');
             if ( this.cssSelectorType(prefix) === 0 ) {
                 if (
                     root ||
-                    this.reIsSiblingSelector.test(prefix) === false ||
+                    this.reIsCombinator.test(prefix) === false ||
                     this.compileSpathExpression(prefix) === undefined
                 ) {
                     return;
@@ -1770,13 +1769,13 @@ Parser.prototype.SelectorCompiler = class {
     compileArgument(operator, args) {
         switch ( operator ) {
         case ':has':
-            return this.compileConditionalSelector(args);
+            return this.compileProcedural(args);
         case ':has-text':
             return this.compileText(args);
         case ':if':
-            return this.compileConditionalSelector(args);
+            return this.compileProcedural(args);
         case ':if-not':
-            return this.compileConditionalSelector(args);
+            return this.compileProcedural(args);
         case ':matches-css':
             return this.compileCSSDeclaration(args);
         case ':matches-css-after':
